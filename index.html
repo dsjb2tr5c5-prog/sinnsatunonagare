@@ -2,25 +2,50 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>診察の流れ</title>
   <style>
-    /* 全体のスタイル */
-    @charset "UTF-8";
+    /* --- 1. 背景カモフラージュ：ここが最大のポイント --- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html {
+      /* 画面の一番下をあらかじめボタンの色で半分ずつ塗っておく */
+      background: linear-gradient(to right, #9bc2e6 50%, #4472c4 50%);
+      background-repeat: no-repeat;
+      background-position: bottom;
+      background-size: 100% 100px; 
+      background-color: #ffffff; /* 基本は白 */
+    }
+
     body {
       font-family: sans-serif;
-      margin: 0;
-      background: #fff;
-      padding-bottom: 100px; /* ボタンに被らない余白 */
+      margin: 0; padding: 0;
+      /* iPhoneのホームバー対策をしつつ、ボタンの高さ分だけ余白を作る */
+      padding-bottom: calc(75px + env(safe-area-inset-bottom));
     }
-    .container { width: 100%; overflow-x: hidden; }
-    .description-image { width: 100%; display: block; }
 
-    /* --- アニメーションパーツ（CSSを土台に再現） --- */
+    .container { width: 100%; overflow-x: hidden; }
+
+    /* 画像の上下に出る隙間を0にする */
+    .form-editor > div, .form-group {
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: 0;
+      font-size: 0;
+    }
+
+    .description-image {
+      width: 100%;
+      display: block;
+      vertical-align: bottom;
+      /* 写真同士の1pxの隙間も防ぐため、少しだけ下に重ねる */
+      margin-bottom: -1px; 
+    }
+
+    /* --- 2. アニメーションパーツ（パーツは外部から取得） --- */
     .form-editor > div:nth-child(1) { display:none; } 
-    
     .form-editor > div:nth-child(2) { position: relative; z-index: 900; }
-    /* ここに文字パーツが浮き上がるアニメーションが自動適用されます */
+    
     .form-editor div:nth-child(2) .col-sm-12:before {
       content: ""; position: absolute; width: 50.26%; aspect-ratio: 784/262;
       background: url(https://d27rnpuamwvieu.cloudfront.net/0fZb3xLuJyCmduX8dojK2dwXX/normal) no-repeat center/contain;
@@ -32,25 +57,45 @@
       top: 48.8%; left: 11.1%; opacity: 0; animation: feedin-Up 0.5s 1.1s forwards;
     }
 
-    /* --- 固定ボタンのデザイン --- */
+    /* --- 3. 固定ボタン（背景色を画像に完璧に合わせる） --- */
     .form-editor div:nth-child(6), .form-editor div:nth-child(7) {
-      position: fixed; bottom: 0; z-index: 2000; height: 75px;
-    }
-    /* 戻るボタン */
-    .form-editor div:nth-child(6) { width: 46%; left: 0; }
-    .form-editor div:nth-child(6) a::before {
-      content: ""; display: block; width: 100%; height: 100%;
-      background: url(https://d27rnpuamwvieu.cloudfront.net/08AVsRiBfCzj4uvDkZGjKpgXX/normal) no-repeat center/contain;
-    }
-    /* 予約ボタン */
-    .form-editor div:nth-child(7) { width: 54%; right: 0; }
-    .form-editor div:nth-child(7) a::before {
-      content: ""; display: block; width: 100%; height: 100%;
-      background: url(https://d27rnpuamwvieu.cloudfront.net/0liqkBiyY11Q8sJBH3scOkgXX/normal) no-repeat center/contain;
+      position: fixed;
+      bottom: 0;
+      z-index: 2000;
+      height: calc(75px + env(safe-area-inset-bottom));
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
-    /* 共通のリンク設定 */
-    .btn-link { display: block; width: 100%; height: 100%; text-indent: -9999px; cursor: pointer; }
+    /* 戻る：#9bc2e6 (画像と同じ水色) */
+    .form-editor div:nth-child(6) {
+      width: 50%;
+      left: 0;
+      background-color: #9bc2e6;
+    }
+    .form-editor div:nth-child(6) a::before {
+      content: ""; display: block; width: 100%; height: 75px;
+      background: url(https://d27rnpuamwvieu.cloudfront.net/08AVsRiBfCzj4uvDkZGjKpgXX/normal) no-repeat bottom/contain;
+    }
+
+    /* 予約：#4472c4 (画像と同じ青色) */
+    .form-editor div:nth-child(7) {
+      width: 50%;
+      right: 0;
+      background-color: #4472c4;
+    }
+    .form-editor div:nth-child(7) a::before {
+      content: ""; display: block; width: 100%; height: 75px;
+      background: url(https://d27rnpuamwvieu.cloudfront.net/0liqkBiyY11Q8sJBH3scOkgXX/normal) no-repeat bottom/contain;
+    }
+
+    /* リンク全体 */
+    .btn-link { 
+      display: block; 
+      width: 100%; 
+      height: 100%; 
+      text-indent: -9999px; 
+      -webkit-tap-highlight-color: transparent;
+    }
 
     @keyframes feedin-Up {
       from { opacity: 0; transform: translateY(20px); }
@@ -64,35 +109,3 @@
   <div class="form-editor">
     
     <div></div>
-
-    <div class="form-group">
-      <div class="col-sm-12">
-        <img src="IMG_1227.png" class="description-image">
-      </div>
-    </div>
-
-    <div class="form-group">
-      <img src="IMG_1228.png" class="description-image">
-    </div>
-
-    <div class="form-group">
-      <img src="IMG_1229.jpeg" class="description-image">
-    </div>
-
-    <div class="form-group">
-      <img src="IMG_1230.jpeg" class="description-image">
-    </div>
-
-    <div>
-      <a href="https://line.me/R/ti/p/@468abuod" class="btn-link">戻る</a>
-    </div>
-
-    <div>
-      <a href="https://liff.line.me/2009400645-19jige5V/salon/dateselector/week/2026/3/15?liff_id=2009400645-19jige5V&is=GN9yXejuAI" class="btn-link">予約する</a>
-    </div>
-
-  </div>
-</div>
-
-</body>
-</html>
